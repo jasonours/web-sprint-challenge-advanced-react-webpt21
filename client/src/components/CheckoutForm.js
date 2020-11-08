@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "../hooks/useForm";
 
 const initialValue = {
   firstName: "",
@@ -14,22 +15,27 @@ const initialValue = {
 // and replace the necessary stateful logic from CheckoutForm with the hook
 
 const CheckoutForm = (props) => {
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [values, setValues] = useState(initialValue);
+  // const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [values, showSuccessMessage, handleChanges, handleSubmit,  clearForm] = useForm(initialValue);
 
-  const handleChanges = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
+  // const handleChanges = (e) => {
+  //   setValues({ ...values, [e.target.name]: e.target.value });
+  // };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setShowSuccessMessage(true);
+  // };
+
+  const handleClearForm = e => {
     e.preventDefault();
-    setShowSuccessMessage(true);
+    clearForm();
   };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <h2>Checkout Form</h2>
+        <h2 data-testid="formheader">Checkout Form</h2>
         <label>
           First Name:
           <input
@@ -66,13 +72,14 @@ const CheckoutForm = (props) => {
           Zip:
           <input name="zip" value={values.zip} onChange={handleChanges} />
         </label>
-        <button>Checkout</button>
+        <button data-testid="submitbutton">Checkout</button>
+        <button onClick={handleClearForm}>Clear</button>
       </form>
 
       {showSuccessMessage && (
         <div className="success-message" data-testid="successMessage">
           <p>
-            You have ordered some plants! Woo-hoo! <span role="img">🎉</span>
+            You have ordered some plants! Woo-hoo! <span role="img" aria-label="party">🎉</span>
           </p>
           <p>Your new green friends will be shipped to:</p>
           <br />
